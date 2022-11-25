@@ -1,0 +1,91 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "Jobs 1 CloudFormation Template",
+    "Parameters": {
+      "CompanyName": {
+        "Description": "Company Name",
+        "Type": "String",
+        "Default": "scottdolanllc"
+      },
+      "ProjectName": {
+        "Description": "Project Name",
+        "Type": "String",
+        "Default": "cloudops"
+      },
+      "EnvironmentName": {
+        "Description": "Environment Name",
+        "Type": "String",
+        "Default": "prod",
+        "AllowedValues": [
+          "lab",
+          "dev",
+          "uat",
+          "prod"
+        ]
+      },
+      "OwnerEmail": {
+        "Default": "office@scottdolan.llc",
+        "Description": "Owner Email - The address to notify if there are any operational issues related to the Application",
+        "Type": "String",
+        "AllowedPattern": "([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)",
+        "ConstraintDescription": "must be a valid email address."
+      },
+      "Version": {
+        "Default": "1.0.0",
+        "Type": "String",
+        "Description": "Version"
+      },
+      "VpcRouteTable": {
+        "Description": "Vpc default Route Table",
+        "Type": "String",
+        "Default": "rtb-051e29e4b5dbba802"
+      }
+    },
+    "Mappings": {
+      "Environments": {
+        "lab": {
+          "Env": "lab"
+        },
+        "dev": {
+          "Env": "dev"
+        },
+        "uat": {
+          "Env": "uat"
+        },
+        "prod": {
+          "Env": "prod"
+        }
+      }
+    },
+    "Resources": {
+      "DefaultPublicRoute": {
+        "Type": "AWS::EC2::Route",
+        "Properties": {
+          "RouteTableId": {
+            "Fn::Sub": "${VpcRouteTable}"
+          },
+          "DestinationCidrBlock": "0.0.0.0/0",
+          "GatewayId": {
+            "Fn::ImportValue": {
+              "Fn::Sub": "${ProjectName}-internet-gateway"
+            }
+          }
+        }
+      }
+    },
+    "Outputs": {
+        "VpcRouteTable": {
+            "Description": "The Vpc ID",
+            "Value": {
+                "Fn::Sub": "${VpcRouteTable}"
+            },
+            "Export": {
+              "Name": {
+                "Fn::Sub": "${ProjectName}-vpc-route-table"
+              }
+            }
+        }
+
+    }
+  }
