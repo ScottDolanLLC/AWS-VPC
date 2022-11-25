@@ -4,7 +4,8 @@ This repository contains cloud formation templates to build a AWS Cloud environm
 
 
 
+# Dependencies 
 
-# Virtual Prviate Cloud  
-# Virtual Private Cloud / Routes 
+/vpc  
+/vpc/routes 
 
